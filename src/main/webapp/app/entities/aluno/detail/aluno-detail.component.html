@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (aluno(); as alunoRef) {
+      <div>
+        <h2 data-cy="alunoDetailsHeading"><span jhiTranslate="metasEnemApp.aluno.detail.title">Aluno</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">Código</span></dt>
+          <dd>
+            <span>{{ alunoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.aluno.nome">Nome</span></dt>
+          <dd>
+            <span>{{ alunoRef.nome }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.aluno.email">Email</span></dt>
+          <dd>
+            <span>{{ alunoRef.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.aluno.dataNascimento">Data Nascimento</span></dt>
+          <dd>
+            <span>{{ alunoRef.dataNascimento | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.aluno.meta">Meta</span></dt>
+          <dd>
+            @if (aluno()!.meta) {
+              <div>
+                <a [routerLink]="['/meta', aluno()!.meta?.id, 'view']">{{ alunoRef.meta?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Voltar</span>
+        </button>
+
+        <button type="button" [routerLink]="['/aluno', alunoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

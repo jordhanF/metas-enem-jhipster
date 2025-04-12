@@ -1,0 +1,154 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-meta-heading" data-cy="MetaCreateUpdateHeading" jhiTranslate="metasEnemApp.meta.home.createOrEditLabel">
+        Criar ou editar Meta
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="metasEnemApp.meta.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let linguagensRef = editForm.get('linguagens')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_linguagens" jhiTranslate="metasEnemApp.meta.linguagens">Linguagens</label>
+          <input
+            type="number"
+            class="form-control"
+            name="linguagens"
+            id="field_linguagens"
+            data-cy="linguagens"
+            formControlName="linguagens"
+          />
+          @if (linguagensRef.invalid && (linguagensRef.dirty || linguagensRef.touched)) {
+            <div>
+              @if (editForm.get('linguagens')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Este campo deve ser maior que 0.</small
+                >
+              }
+              @if (editForm.get('linguagens')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '1000' }"
+                  >Este campo não pode ser maior que 1000.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('linguagens')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Este campo é do tipo numérico.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let humanasRef = editForm.get('humanas')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_humanas" jhiTranslate="metasEnemApp.meta.humanas">Humanas</label>
+          <input type="number" class="form-control" name="humanas" id="field_humanas" data-cy="humanas" formControlName="humanas" />
+          @if (humanasRef.invalid && (humanasRef.dirty || humanasRef.touched)) {
+            <div>
+              @if (editForm.get('humanas')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Este campo deve ser maior que 0.</small
+                >
+              }
+              @if (editForm.get('humanas')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '1000' }"
+                  >Este campo não pode ser maior que 1000.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('humanas')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Este campo é do tipo numérico.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let naturezaRef = editForm.get('natureza')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_natureza" jhiTranslate="metasEnemApp.meta.natureza">Natureza</label>
+          <input type="number" class="form-control" name="natureza" id="field_natureza" data-cy="natureza" formControlName="natureza" />
+          @if (naturezaRef.invalid && (naturezaRef.dirty || naturezaRef.touched)) {
+            <div>
+              @if (editForm.get('natureza')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Este campo deve ser maior que 0.</small
+                >
+              }
+              @if (editForm.get('natureza')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '1000' }"
+                  >Este campo não pode ser maior que 1000.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('natureza')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Este campo é do tipo numérico.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let matematicaRef = editForm.get('matematica')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_matematica" jhiTranslate="metasEnemApp.meta.matematica">Matematica</label>
+          <input
+            type="number"
+            class="form-control"
+            name="matematica"
+            id="field_matematica"
+            data-cy="matematica"
+            formControlName="matematica"
+          />
+          @if (matematicaRef.invalid && (matematicaRef.dirty || matematicaRef.touched)) {
+            <div>
+              @if (editForm.get('matematica')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Este campo deve ser maior que 0.</small
+                >
+              }
+              @if (editForm.get('matematica')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '1000' }"
+                  >Este campo não pode ser maior que 1000.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('matematica')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Este campo é do tipo numérico.</small
+              >
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (meta(); as metaRef) {
+      <div>
+        <h2 data-cy="metaDetailsHeading"><span jhiTranslate="metasEnemApp.meta.detail.title">Meta</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">Código</span></dt>
+          <dd>
+            <span>{{ metaRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.linguagens">Linguagens</span></dt>
+          <dd>
+            <span>{{ metaRef.linguagens }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.humanas">Humanas</span></dt>
+          <dd>
+            <span>{{ metaRef.humanas }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.natureza">Natureza</span></dt>
+          <dd>
+            <span>{{ metaRef.natureza }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.matematica">Matematica</span></dt>
+          <dd>
+            <span>{{ metaRef.matematica }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Voltar</span>
+        </button>
+
+        <button type="button" [routerLink]="['/meta', metaRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

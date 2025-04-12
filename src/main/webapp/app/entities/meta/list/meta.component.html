@@ -1,0 +1,108 @@
+<div>
+  <h2 id="page-heading" data-cy="MetaHeading">
+    <span jhiTranslate="metasEnemApp.meta.home.title">Metas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="metasEnemApp.meta.home.refreshListLabel">Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-meta"
+        [routerLink]="['/meta/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="metasEnemApp.meta.home.createLabel">Criar novo Meta</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (metas().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="metasEnemApp.meta.home.notFound">Nenhum Meta encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">Código</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="linguagens">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.linguagens">Linguagens</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="humanas">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.humanas">Humanas</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="natureza">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.natureza">Natureza</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="matematica">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.matematica">Matematica</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (meta of metas(); track trackId(meta)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/meta', meta.id, 'view']">{{ meta.id }}</a>
+              </td>
+              <td>{{ meta.linguagens }}</td>
+              <td>{{ meta.humanas }}</td>
+              <td>{{ meta.natureza }}</td>
+              <td>{{ meta.matematica }}</td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/meta', meta.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Visualizar</span>
+                  </a>
+
+                  <a [routerLink]="['/meta', meta.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(meta)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Excluir</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

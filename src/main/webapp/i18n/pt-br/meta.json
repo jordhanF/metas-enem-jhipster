@@ -1,0 +1,28 @@
+{
+  "metasEnemApp": {
+    "meta": {
+      "home": {
+        "title": "Metas",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Meta",
+        "createOrEditLabel": "Criar ou editar Meta",
+        "notFound": "Nenhum Meta encontrado"
+      },
+      "created": "Um novo Meta foi criado com o identificador {{ param }}",
+      "updated": "Um Meta foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Meta foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Meta {{ id }}?"
+      },
+      "detail": {
+        "title": "Meta"
+      },
+      "id": "ID",
+      "linguagens": "Linguagens",
+      "humanas": "Humanas",
+      "natureza": "Natureza",
+      "matematica": "Matematica",
+      "aluno": "Aluno"
+    }
+  }
+}
