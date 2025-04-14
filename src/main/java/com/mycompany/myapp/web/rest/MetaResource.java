@@ -13,14 +13,18 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
+import org.springframework.web.util.ForwardedHeaderUtils;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
 
 /**
@@ -159,27 +163,31 @@ public class MetaResource {
     /**
      * {@code GET  /metas} : get all the metas.
      *
-     * @param filter the filter of the request.
+     * @param pageable the pagination information.
+     * @param request a {@link ServerHttpRequest} request.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of metas in body.
      */
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<List<MetaDTO>> getAllMetas(@RequestParam(name = "filter", required = false) String filter) {
-        if ("aluno-is-null".equals(filter)) {
-            LOG.debug("REST request to get all Metas where aluno is null");
-            return metaService.findAllWhereAlunoIsNull().collectList();
-        }
-        LOG.debug("REST request to get all Metas");
-        return metaService.findAll().collectList();
-    }
-
-    /**
-     * {@code GET  /metas} : get all the metas as a stream.
-     * @return the {@link Flux} of metas.
-     */
-    @GetMapping(value = "", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<MetaDTO> getAllMetasAsStream() {
-        LOG.debug("REST request to get all Metas as a stream");
-        return metaService.findAll();
+    public Mono<ResponseEntity<List<MetaDTO>>> getAllMetas(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        ServerHttpRequest request,
+        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
+    ) {
+        LOG.debug("REST request to get a page of Metas");
+        return metaService
+            .countAll()
+            .zipWith(metaService.findAll(pageable).collectList())
+            .map(countWithEntities ->
+                ResponseEntity.ok()
+                    .headers(
+                        PaginationUtil.generatePaginationHttpHeaders(
+                            ForwardedHeaderUtils.adaptFromForwardedHeaders(request.getURI(), request.getHeaders()),
+                            new PageImpl<>(countWithEntities.getT2(), pageable, countWithEntities.getT1())
+                        )
+                    )
+                    .body(countWithEntities.getT2())
+            );
     }
 
     /**

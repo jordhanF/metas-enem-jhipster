@@ -24,6 +24,8 @@ describe('Meta Form Service', () => {
             humanas: expect.any(Object),
             natureza: expect.any(Object),
             matematica: expect.any(Object),
+            dataMeta: expect.any(Object),
+            aluno: expect.any(Object),
           }),
         );
       });
@@ -38,6 +40,8 @@ describe('Meta Form Service', () => {
             humanas: expect.any(Object),
             natureza: expect.any(Object),
             matematica: expect.any(Object),
+            dataMeta: expect.any(Object),
+            aluno: expect.any(Object),
           }),
         );
       });

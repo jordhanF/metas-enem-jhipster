@@ -9,12 +9,13 @@ entity Meta {
     humanas Integer min(0) max(1000)
     natureza Integer min(0) max(1000)
     matematica Integer min(0) max(1000)
+    dataMeta LocalDate
 }
 
-relationship OneToOne {
-    Aluno{meta} to Meta{aluno}
+relationship OneToMany {
+    Aluno{meta} to Meta{aluno(nome) required}
 }
 
 dto * with mapstruct
 service * with serviceImpl
-paginate Aluno with pagination
+paginate Aluno, Meta with pagination

@@ -15,7 +15,9 @@ public class MetaSqlHelper {
         columns.add(Column.aliased("humanas", table, columnPrefix + "_humanas"));
         columns.add(Column.aliased("natureza", table, columnPrefix + "_natureza"));
         columns.add(Column.aliased("matematica", table, columnPrefix + "_matematica"));
+        columns.add(Column.aliased("data_meta", table, columnPrefix + "_data_meta"));
 
+        columns.add(Column.aliased("aluno_id", table, columnPrefix + "_aluno_id"));
         return columns;
     }
 }

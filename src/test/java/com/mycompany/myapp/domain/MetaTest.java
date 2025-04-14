@@ -30,10 +30,8 @@ class MetaTest {
 
         meta.setAluno(alunoBack);
         assertThat(meta.getAluno()).isEqualTo(alunoBack);
-        assertThat(alunoBack.getMeta()).isEqualTo(meta);
 
         meta.aluno(null);
         assertThat(meta.getAluno()).isNull();
-        assertThat(alunoBack.getMeta()).isNull();
     }
 }

@@ -61,12 +61,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="meta.id">
-              <div class="d-flex">
-                <span jhiTranslate="metasEnemApp.aluno.meta">Meta</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -79,13 +73,6 @@
               <td>{{ aluno.nome }}</td>
               <td>{{ aluno.email }}</td>
               <td>{{ aluno.dataNascimento | formatMediumDate }}</td>
-              <td>
-                @if (aluno.meta) {
-                  <div>
-                    <a [routerLink]="['/meta', aluno.meta.id, 'view']">{{ aluno.meta.id }}</a>
-                  </div>
-                }
-              </td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/aluno', aluno.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

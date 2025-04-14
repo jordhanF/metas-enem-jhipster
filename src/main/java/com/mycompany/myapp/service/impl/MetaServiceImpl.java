@@ -6,6 +6,7 @@ import com.mycompany.myapp.service.dto.MetaDTO;
 import com.mycompany.myapp.service.mapper.MetaMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -58,19 +59,13 @@ public class MetaServiceImpl implements MetaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Flux<MetaDTO> findAll() {
+    public Flux<MetaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Metas");
-        return metaRepository.findAll().map(metaMapper::toDto);
+        return metaRepository.findAllBy(pageable).map(metaMapper::toDto);
     }
 
-    /**
-     *  Get all the metas where Aluno is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public Flux<MetaDTO> findAllWhereAlunoIsNull() {
-        LOG.debug("Request to get all metas where Aluno is null");
-        return metaRepository.findAllWhereAlunoIsNull().map(metaMapper::toDto);
+    public Flux<MetaDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return metaRepository.findAllWithEagerRelationships(pageable).map(metaMapper::toDto);
     }
 
     public Mono<Long> countAll() {
@@ -81,7 +76,7 @@ public class MetaServiceImpl implements MetaService {
     @Transactional(readOnly = true)
     public Mono<MetaDTO> findOne(Long id) {
         LOG.debug("Request to get Meta : {}", id);
-        return metaRepository.findById(id).map(metaMapper::toDto);
+        return metaRepository.findOneWithEagerRelationships(id).map(metaMapper::toDto);
     }
 
     @Override

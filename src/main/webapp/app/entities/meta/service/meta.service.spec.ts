@@ -2,13 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
+import { DATE_FORMAT } from 'app/config/input.constants';
 import { IMeta } from '../meta.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../meta.test-samples';
 
-import { MetaService } from './meta.service';
+import { MetaService, RestMeta } from './meta.service';
 
-const requireRestSample: IMeta = {
+const requireRestSample: RestMeta = {
   ...sampleWithRequiredData,
+  dataMeta: sampleWithRequiredData.dataMeta?.format(DATE_FORMAT),
 };
 
 describe('Meta Service', () => {

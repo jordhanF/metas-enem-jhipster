@@ -59,16 +59,6 @@
             </button>
           </div>
         </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_meta" jhiTranslate="metasEnemApp.aluno.meta">Meta</label>
-          <select class="form-control" id="field_meta" data-cy="meta" name="meta" formControlName="meta" [compareWith]="compareMeta">
-            <option [ngValue]="null"></option>
-            @for (metaOption of metasCollection; track $index) {
-              <option [ngValue]="metaOption">{{ metaOption.id }}</option>
-            }
-          </select>
-        </div>
       </div>
 
       <div>

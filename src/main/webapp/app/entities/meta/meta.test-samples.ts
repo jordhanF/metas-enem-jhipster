@@ -1,3 +1,5 @@
+import dayjs from 'dayjs/esm';
+
 import { IMeta, NewMeta } from './meta.model';
 
 export const sampleWithRequiredData: IMeta = {
@@ -5,9 +7,9 @@ export const sampleWithRequiredData: IMeta = {
 };
 
 export const sampleWithPartialData: IMeta = {
-  id: 21225,
-  linguagens: 763,
-  natureza: 446,
+  id: 25004,
+  linguagens: 446,
+  natureza: 142,
 };
 
 export const sampleWithFullData: IMeta = {
@@ -16,6 +18,7 @@ export const sampleWithFullData: IMeta = {
   humanas: 12,
   natureza: 904,
   matematica: 348,
+  dataMeta: dayjs('2025-04-12'),
 };
 
 export const sampleWithNewData: NewMeta = {

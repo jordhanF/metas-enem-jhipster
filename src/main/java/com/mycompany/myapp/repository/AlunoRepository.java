@@ -2,7 +2,6 @@ package com.mycompany.myapp.repository;
 
 import com.mycompany.myapp.domain.Aluno;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -15,12 +14,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface AlunoRepository extends ReactiveCrudRepository<Aluno, Long>, AlunoRepositoryInternal {
     Flux<Aluno> findAllBy(Pageable pageable);
-
-    @Query("SELECT * FROM aluno entity WHERE entity.meta_id = :id")
-    Flux<Aluno> findByMeta(Long id);
-
-    @Query("SELECT * FROM aluno entity WHERE entity.meta_id IS NULL")
-    Flux<Aluno> findAllWhereMetaIsNull();
 
     @Override
     <S extends Aluno> Mono<S> save(S entity);

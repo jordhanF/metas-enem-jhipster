@@ -50,7 +50,8 @@ public class MetaAsserts {
             .satisfies(a -> assertThat(a.getLinguagens()).as("check linguagens").isEqualTo(expected.getLinguagens()))
             .satisfies(a -> assertThat(a.getHumanas()).as("check humanas").isEqualTo(expected.getHumanas()))
             .satisfies(a -> assertThat(a.getNatureza()).as("check natureza").isEqualTo(expected.getNatureza()))
-            .satisfies(a -> assertThat(a.getMatematica()).as("check matematica").isEqualTo(expected.getMatematica()));
+            .satisfies(a -> assertThat(a.getMatematica()).as("check matematica").isEqualTo(expected.getMatematica()))
+            .satisfies(a -> assertThat(a.getDataMeta()).as("check dataMeta").isEqualTo(expected.getDataMeta()));
     }
 
     /**
@@ -60,6 +61,8 @@ public class MetaAsserts {
      * @param actual the actual entity
      */
     public static void assertMetaUpdatableRelationshipsEquals(Meta expected, Meta actual) {
-        // empty method
+        assertThat(actual)
+            .as("Verify Meta relationships")
+            .satisfies(a -> assertThat(a.getAluno()).as("check aluno").isEqualTo(expected.getAluno()));
     }
 }

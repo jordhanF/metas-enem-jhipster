@@ -21,7 +21,6 @@ type AlunoFormGroupContent = {
   nome: FormControl<IAluno['nome']>;
   email: FormControl<IAluno['email']>;
   dataNascimento: FormControl<IAluno['dataNascimento']>;
-  meta: FormControl<IAluno['meta']>;
 };
 
 export type AlunoFormGroup = FormGroup<AlunoFormGroupContent>;
@@ -48,7 +47,6 @@ export class AlunoFormService {
         validators: [Validators.required],
       }),
       dataNascimento: new FormControl(alunoRawValue.dataNascimento),
-      meta: new FormControl(alunoRawValue.meta),
     });
   }
 

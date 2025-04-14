@@ -22,6 +22,8 @@ type MetaFormGroupContent = {
   humanas: FormControl<IMeta['humanas']>;
   natureza: FormControl<IMeta['natureza']>;
   matematica: FormControl<IMeta['matematica']>;
+  dataMeta: FormControl<IMeta['dataMeta']>;
+  aluno: FormControl<IMeta['aluno']>;
 };
 
 export type MetaFormGroup = FormGroup<MetaFormGroupContent>;
@@ -52,6 +54,10 @@ export class MetaFormService {
       }),
       matematica: new FormControl(metaRawValue.matematica, {
         validators: [Validators.min(0), Validators.max(1000)],
+      }),
+      dataMeta: new FormControl(metaRawValue.dataMeta),
+      aluno: new FormControl(metaRawValue.aluno, {
+        validators: [Validators.required],
       }),
     });
   }

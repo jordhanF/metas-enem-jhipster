@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.service.dto.MetaDTO;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,16 +36,18 @@ public interface MetaService {
     /**
      * Get all the metas.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Flux<MetaDTO> findAll();
+    Flux<MetaDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the MetaDTO where Aluno is {@code null}.
+     * Get all the metas with eager load of many-to-many relationships.
      *
-     * @return the {@link Flux} of entities.
+     * @param pageable the pagination information.
+     * @return the list of entities.
      */
-    Flux<MetaDTO> findAllWhereAlunoIsNull();
+    Flux<MetaDTO> findAllWithEagerRelationships(Pageable pageable);
 
     /**
      * Returns the number of metas available.

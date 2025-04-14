@@ -31,6 +31,18 @@
           <dd>
             <span>{{ metaRef.matematica }}</span>
           </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.dataMeta">Data Meta</span></dt>
+          <dd>
+            <span>{{ metaRef.dataMeta | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="metasEnemApp.meta.aluno">Aluno</span></dt>
+          <dd>
+            @if (meta()!.aluno) {
+              <div>
+                <a [routerLink]="['/aluno', meta()!.aluno?.id, 'view']">{{ metaRef.aluno?.nome }}</a>
+              </div>
+            }
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

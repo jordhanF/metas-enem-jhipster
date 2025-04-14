@@ -15,7 +15,6 @@ public class AlunoSqlHelper {
         columns.add(Column.aliased("email", table, columnPrefix + "_email"));
         columns.add(Column.aliased("data_nascimento", table, columnPrefix + "_data_nascimento"));
 
-        columns.add(Column.aliased("meta_id", table, columnPrefix + "_meta_id"));
         return columns;
     }
 }

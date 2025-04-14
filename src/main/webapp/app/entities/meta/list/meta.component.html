@@ -68,6 +68,19 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="dataMeta">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.dataMeta">Data Meta</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="aluno.nome">
+              <div class="d-flex">
+                <span jhiTranslate="metasEnemApp.meta.aluno">Aluno</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -81,6 +94,14 @@
               <td>{{ meta.humanas }}</td>
               <td>{{ meta.natureza }}</td>
               <td>{{ meta.matematica }}</td>
+              <td>{{ meta.dataMeta | formatMediumDate }}</td>
+              <td>
+                @if (meta.aluno) {
+                  <div>
+                    <a [routerLink]="['/aluno', meta.aluno.id, 'view']">{{ meta.aluno.nome }}</a>
+                  </div>
+                }
+              </td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/meta', meta.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
@@ -103,6 +124,25 @@
           }
         </tbody>
       </table>
+    </div>
+  }
+  @if (metas().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
     </div>
   }
 </div>

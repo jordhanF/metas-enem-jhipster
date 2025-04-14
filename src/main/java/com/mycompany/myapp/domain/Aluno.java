@@ -1,8 +1,11 @@
 package com.mycompany.myapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -32,10 +35,8 @@ public class Aluno implements Serializable {
     private LocalDate dataNascimento;
 
     @org.springframework.data.annotation.Transient
-    private Meta meta;
-
-    @Column("meta_id")
-    private Long metaId;
+    @JsonIgnoreProperties(value = { "aluno" }, allowSetters = true)
+    private Set<Meta> metas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -91,26 +92,35 @@ public class Aluno implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    public Meta getMeta() {
-        return this.meta;
+    public Set<Meta> getMetas() {
+        return this.metas;
     }
 
-    public void setMeta(Meta meta) {
-        this.meta = meta;
-        this.metaId = meta != null ? meta.getId() : null;
+    public void setMetas(Set<Meta> metas) {
+        if (this.metas != null) {
+            this.metas.forEach(i -> i.setAluno(null));
+        }
+        if (metas != null) {
+            metas.forEach(i -> i.setAluno(this));
+        }
+        this.metas = metas;
     }
 
-    public Aluno meta(Meta meta) {
-        this.setMeta(meta);
+    public Aluno metas(Set<Meta> metas) {
+        this.setMetas(metas);
         return this;
     }
 
-    public Long getMetaId() {
-        return this.metaId;
+    public Aluno addMeta(Meta meta) {
+        this.metas.add(meta);
+        meta.setAluno(this);
+        return this;
     }
 
-    public void setMetaId(Long meta) {
-        this.metaId = meta;
+    public Aluno removeMeta(Meta meta) {
+        this.metas.remove(meta);
+        meta.setAluno(null);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

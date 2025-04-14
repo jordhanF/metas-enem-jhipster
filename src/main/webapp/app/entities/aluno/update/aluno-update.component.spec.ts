@@ -4,8 +4,6 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, from, of } from 'rxjs';
 
-import { IMeta } from 'app/entities/meta/meta.model';
-import { MetaService } from 'app/entities/meta/service/meta.service';
 import { AlunoService } from '../service/aluno.service';
 import { IAluno } from '../aluno.model';
 import { AlunoFormService } from './aluno-form.service';
@@ -18,7 +16,6 @@ describe('Aluno Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let alunoFormService: AlunoFormService;
   let alunoService: AlunoService;
-  let metaService: MetaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -41,39 +38,17 @@ describe('Aluno Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     alunoFormService = TestBed.inject(AlunoFormService);
     alunoService = TestBed.inject(AlunoService);
-    metaService = TestBed.inject(MetaService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('should call meta query and add missing value', () => {
-      const aluno: IAluno = { id: 9303 };
-      const meta: IMeta = { id: 14440 };
-      aluno.meta = meta;
-
-      const metaCollection: IMeta[] = [{ id: 14440 }];
-      jest.spyOn(metaService, 'query').mockReturnValue(of(new HttpResponse({ body: metaCollection })));
-      const expectedCollection: IMeta[] = [meta, ...metaCollection];
-      jest.spyOn(metaService, 'addMetaToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ aluno });
-      comp.ngOnInit();
-
-      expect(metaService.query).toHaveBeenCalled();
-      expect(metaService.addMetaToCollectionIfMissing).toHaveBeenCalledWith(metaCollection, meta);
-      expect(comp.metasCollection).toEqual(expectedCollection);
-    });
-
     it('should update editForm', () => {
       const aluno: IAluno = { id: 9303 };
-      const meta: IMeta = { id: 14440 };
-      aluno.meta = meta;
 
       activatedRoute.data = of({ aluno });
       comp.ngOnInit();
 
-      expect(comp.metasCollection).toContainEqual(meta);
       expect(comp.aluno).toEqual(aluno);
     });
   });
@@ -143,18 +118,6 @@ describe('Aluno Management Update Component', () => {
       expect(alunoService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Compare relationships', () => {
-    describe('compareMeta', () => {
-      it('should forward to metaService', () => {
-        const entity = { id: 14440 };
-        const entity2 = { id: 7336 };
-        jest.spyOn(metaService, 'compareMeta');
-        comp.compareMeta(entity, entity2);
-        expect(metaService.compareMeta).toHaveBeenCalledWith(entity, entity2);
-      });
     });
   });
 });
