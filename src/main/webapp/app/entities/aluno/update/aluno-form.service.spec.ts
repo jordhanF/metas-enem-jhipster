@@ -23,7 +23,6 @@ describe('Aluno Form Service', () => {
             nome: expect.any(Object),
             email: expect.any(Object),
             dataNascimento: expect.any(Object),
-            meta: expect.any(Object),
           }),
         );
       });
@@ -37,7 +36,6 @@ describe('Aluno Form Service', () => {
             nome: expect.any(Object),
             email: expect.any(Object),
             dataNascimento: expect.any(Object),
-            meta: expect.any(Object),
           }),
         );
       });

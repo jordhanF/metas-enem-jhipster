@@ -27,14 +27,6 @@
           <dd>
             <span>{{ alunoRef.dataNascimento | formatMediumDate }}</span>
           </dd>
-          <dt><span jhiTranslate="metasEnemApp.aluno.meta">Meta</span></dt>
-          <dd>
-            @if (aluno()!.meta) {
-              <div>
-                <a [routerLink]="['/meta', aluno()!.meta?.id, 'view']">{{ alunoRef.meta?.id }}</a>
-              </div>
-            }
-          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

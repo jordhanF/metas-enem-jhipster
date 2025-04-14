@@ -4,6 +4,8 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, from, of } from 'rxjs';
 
+import { IAluno } from 'app/entities/aluno/aluno.model';
+import { AlunoService } from 'app/entities/aluno/service/aluno.service';
 import { MetaService } from '../service/meta.service';
 import { IMeta } from '../meta.model';
 import { MetaFormService } from './meta-form.service';
@@ -16,6 +18,7 @@ describe('Meta Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let metaFormService: MetaFormService;
   let metaService: MetaService;
+  let alunoService: AlunoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,17 +41,43 @@ describe('Meta Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     metaFormService = TestBed.inject(MetaFormService);
     metaService = TestBed.inject(MetaService);
+    alunoService = TestBed.inject(AlunoService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('should update editForm', () => {
+    it('should call Aluno query and add missing value', () => {
       const meta: IMeta = { id: 7336 };
+      const aluno: IAluno = { id: 15328 };
+      meta.aluno = aluno;
+
+      const alunoCollection: IAluno[] = [{ id: 15328 }];
+      jest.spyOn(alunoService, 'query').mockReturnValue(of(new HttpResponse({ body: alunoCollection })));
+      const additionalAlunos = [aluno];
+      const expectedCollection: IAluno[] = [...additionalAlunos, ...alunoCollection];
+      jest.spyOn(alunoService, 'addAlunoToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ meta });
       comp.ngOnInit();
 
+      expect(alunoService.query).toHaveBeenCalled();
+      expect(alunoService.addAlunoToCollectionIfMissing).toHaveBeenCalledWith(
+        alunoCollection,
+        ...additionalAlunos.map(expect.objectContaining),
+      );
+      expect(comp.alunosSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('should update editForm', () => {
+      const meta: IMeta = { id: 7336 };
+      const aluno: IAluno = { id: 15328 };
+      meta.aluno = aluno;
+
+      activatedRoute.data = of({ meta });
+      comp.ngOnInit();
+
+      expect(comp.alunosSharedCollection).toContainEqual(aluno);
       expect(comp.meta).toEqual(meta);
     });
   });
@@ -118,6 +147,18 @@ describe('Meta Management Update Component', () => {
       expect(metaService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Compare relationships', () => {
+    describe('compareAluno', () => {
+      it('should forward to alunoService', () => {
+        const entity = { id: 15328 };
+        const entity2 = { id: 9303 };
+        jest.spyOn(alunoService, 'compareAluno');
+        comp.compareAluno(entity, entity2);
+        expect(alunoService.compareAluno).toHaveBeenCalledWith(entity, entity2);
+      });
     });
   });
 });

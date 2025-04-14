@@ -29,7 +29,6 @@ public class AlunoRowMapper implements BiFunction<Row, String, Aluno> {
         entity.setNome(converter.fromRow(row, prefix + "_nome", String.class));
         entity.setEmail(converter.fromRow(row, prefix + "_email", String.class));
         entity.setDataNascimento(converter.fromRow(row, prefix + "_data_nascimento", LocalDate.class));
-        entity.setMetaId(converter.fromRow(row, prefix + "_meta_id", Long.class));
         return entity;
     }
 }

@@ -14,7 +14,21 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("unused")
 @Repository
 public interface MetaRepository extends ReactiveCrudRepository<Meta, Long>, MetaRepositoryInternal {
-    @Query("SELECT * FROM meta entity WHERE entity.id not in (select aluno_id from aluno)")
+    Flux<Meta> findAllBy(Pageable pageable);
+
+    @Override
+    Mono<Meta> findOneWithEagerRelationships(Long id);
+
+    @Override
+    Flux<Meta> findAllWithEagerRelationships();
+
+    @Override
+    Flux<Meta> findAllWithEagerRelationships(Pageable page);
+
+    @Query("SELECT * FROM meta entity WHERE entity.aluno_id = :id")
+    Flux<Meta> findByAluno(Long id);
+
+    @Query("SELECT * FROM meta entity WHERE entity.aluno_id IS NULL")
     Flux<Meta> findAllWhereAlunoIsNull();
 
     @Override
@@ -40,4 +54,12 @@ interface MetaRepositoryInternal {
     Mono<Meta> findById(Long id);
     // this is not supported at the moment because of https://github.com/jhipster/generator-jhipster/issues/18269
     // Flux<Meta> findAllBy(Pageable pageable, Criteria criteria);
+
+    Mono<Meta> findOneWithEagerRelationships(Long id);
+
+    Flux<Meta> findAllWithEagerRelationships();
+
+    Flux<Meta> findAllWithEagerRelationships(Pageable page);
+
+    Mono<Void> deleteById(Long id);
 }

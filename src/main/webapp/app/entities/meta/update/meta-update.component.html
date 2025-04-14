@@ -132,6 +132,42 @@
             </div>
           }
         </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_dataMeta" jhiTranslate="metasEnemApp.meta.dataMeta">Data Meta</label>
+          <div class="input-group">
+            <input
+              id="field_dataMeta"
+              data-cy="dataMeta"
+              type="text"
+              class="form-control"
+              name="dataMeta"
+              ngbDatepicker
+              #dataMetaDp="ngbDatepicker"
+              formControlName="dataMeta"
+            />
+            <button type="button" class="btn btn-secondary" (click)="dataMetaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_aluno" jhiTranslate="metasEnemApp.meta.aluno">Aluno</label>
+          <select class="form-control" id="field_aluno" data-cy="aluno" name="aluno" formControlName="aluno" [compareWith]="compareAluno">
+            @if (editForm.get(['aluno'])!.value == null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (alunoOption of alunosSharedCollection; track $index) {
+              <option [ngValue]="alunoOption">{{ alunoOption.nome }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['aluno'])!.invalid && (editForm.get(['aluno'])!.dirty || editForm.get(['aluno'])!.touched)) {
+          <div>
+            @if (editForm.get(['aluno'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
+            }
+          </div>
+        }
       </div>
 
       <div>

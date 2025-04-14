@@ -32,16 +32,23 @@
       "fieldValidateRules": ["min", "max"],
       "fieldValidateRulesMax": "1000",
       "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "dataMeta",
+      "fieldType": "LocalDate"
     }
   ],
   "name": "Meta",
+  "pagination": "pagination",
   "relationships": [
     {
+      "otherEntityField": "nome",
       "otherEntityName": "aluno",
       "otherEntityRelationshipName": "meta",
       "relationshipName": "aluno",
       "relationshipSide": "right",
-      "relationshipType": "one-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

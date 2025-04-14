@@ -5,31 +5,39 @@ import static com.mycompany.myapp.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myapp.IntegrationTest;
+import com.mycompany.myapp.domain.Aluno;
 import com.mycompany.myapp.domain.Meta;
 import com.mycompany.myapp.repository.EntityManager;
 import com.mycompany.myapp.repository.MetaRepository;
+import com.mycompany.myapp.service.MetaService;
 import com.mycompany.myapp.service.dto.MetaDTO;
 import com.mycompany.myapp.service.mapper.MetaMapper;
-import java.time.Duration;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 
 /**
  * Integration tests for the {@link MetaResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureWebTestClient(timeout = IntegrationTest.DEFAULT_ENTITY_TIMEOUT)
 @WithMockUser
 class MetaResourceIT {
@@ -46,6 +54,9 @@ class MetaResourceIT {
     private static final Integer DEFAULT_MATEMATICA = 0;
     private static final Integer UPDATED_MATEMATICA = 1;
 
+    private static final LocalDate DEFAULT_DATA_META = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DATA_META = LocalDate.now(ZoneId.systemDefault());
+
     private static final String ENTITY_API_URL = "/api/metas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -58,8 +69,14 @@ class MetaResourceIT {
     @Autowired
     private MetaRepository metaRepository;
 
+    @Mock
+    private MetaRepository metaRepositoryMock;
+
     @Autowired
     private MetaMapper metaMapper;
+
+    @Mock
+    private MetaService metaServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -77,8 +94,18 @@ class MetaResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Meta createEntity() {
-        return new Meta().linguagens(DEFAULT_LINGUAGENS).humanas(DEFAULT_HUMANAS).natureza(DEFAULT_NATUREZA).matematica(DEFAULT_MATEMATICA);
+    public static Meta createEntity(EntityManager em) {
+        Meta meta = new Meta()
+            .linguagens(DEFAULT_LINGUAGENS)
+            .humanas(DEFAULT_HUMANAS)
+            .natureza(DEFAULT_NATUREZA)
+            .matematica(DEFAULT_MATEMATICA)
+            .dataMeta(DEFAULT_DATA_META);
+        // Add required entity
+        Aluno aluno;
+        aluno = em.insert(AlunoResourceIT.createEntity()).block();
+        meta.setAluno(aluno);
+        return meta;
     }
 
     /**
@@ -87,8 +114,18 @@ class MetaResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Meta createUpdatedEntity() {
-        return new Meta().linguagens(UPDATED_LINGUAGENS).humanas(UPDATED_HUMANAS).natureza(UPDATED_NATUREZA).matematica(UPDATED_MATEMATICA);
+    public static Meta createUpdatedEntity(EntityManager em) {
+        Meta updatedMeta = new Meta()
+            .linguagens(UPDATED_LINGUAGENS)
+            .humanas(UPDATED_HUMANAS)
+            .natureza(UPDATED_NATUREZA)
+            .matematica(UPDATED_MATEMATICA)
+            .dataMeta(UPDATED_DATA_META);
+        // Add required entity
+        Aluno aluno;
+        aluno = em.insert(AlunoResourceIT.createUpdatedEntity()).block();
+        updatedMeta.setAluno(aluno);
+        return updatedMeta;
     }
 
     public static void deleteEntities(EntityManager em) {
@@ -97,11 +134,12 @@ class MetaResourceIT {
         } catch (Exception e) {
             // It can fail, if other entities are still referring this - it will be removed later.
         }
+        AlunoResourceIT.deleteEntities(em);
     }
 
     @BeforeEach
     void initTest() {
-        meta = createEntity();
+        meta = createEntity(em);
     }
 
     @AfterEach
@@ -161,36 +199,6 @@ class MetaResourceIT {
     }
 
     @Test
-    void getAllMetasAsStream() {
-        // Initialize the database
-        metaRepository.save(meta).block();
-
-        List<Meta> metaList = webTestClient
-            .get()
-            .uri(ENTITY_API_URL)
-            .accept(MediaType.APPLICATION_NDJSON)
-            .exchange()
-            .expectStatus()
-            .isOk()
-            .expectHeader()
-            .contentTypeCompatibleWith(MediaType.APPLICATION_NDJSON)
-            .returnResult(MetaDTO.class)
-            .getResponseBody()
-            .map(metaMapper::toEntity)
-            .filter(meta::equals)
-            .collectList()
-            .block(Duration.ofSeconds(5));
-
-        assertThat(metaList).isNotNull();
-        assertThat(metaList).hasSize(1);
-        Meta testMeta = metaList.get(0);
-
-        // Test fails because reactive api returns an empty object instead of null
-        // assertMetaAllPropertiesEquals(meta, testMeta);
-        assertMetaUpdatableFieldsEquals(meta, testMeta);
-    }
-
-    @Test
     void getAllMetas() {
         // Initialize the database
         insertedMeta = metaRepository.save(meta).block();
@@ -215,7 +223,26 @@ class MetaResourceIT {
             .jsonPath("$.[*].natureza")
             .value(hasItem(DEFAULT_NATUREZA))
             .jsonPath("$.[*].matematica")
-            .value(hasItem(DEFAULT_MATEMATICA));
+            .value(hasItem(DEFAULT_MATEMATICA))
+            .jsonPath("$.[*].dataMeta")
+            .value(hasItem(DEFAULT_DATA_META.toString()));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllMetasWithEagerRelationshipsIsEnabled() {
+        when(metaServiceMock.findAllWithEagerRelationships(any())).thenReturn(Flux.empty());
+
+        webTestClient.get().uri(ENTITY_API_URL + "?eagerload=true").exchange().expectStatus().isOk();
+
+        verify(metaServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllMetasWithEagerRelationshipsIsNotEnabled() {
+        when(metaServiceMock.findAllWithEagerRelationships(any())).thenReturn(Flux.empty());
+
+        webTestClient.get().uri(ENTITY_API_URL + "?eagerload=false").exchange().expectStatus().isOk();
+        verify(metaRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -243,7 +270,9 @@ class MetaResourceIT {
             .jsonPath("$.natureza")
             .value(is(DEFAULT_NATUREZA))
             .jsonPath("$.matematica")
-            .value(is(DEFAULT_MATEMATICA));
+            .value(is(DEFAULT_MATEMATICA))
+            .jsonPath("$.dataMeta")
+            .value(is(DEFAULT_DATA_META.toString()));
     }
 
     @Test
@@ -267,7 +296,12 @@ class MetaResourceIT {
 
         // Update the meta
         Meta updatedMeta = metaRepository.findById(meta.getId()).block();
-        updatedMeta.linguagens(UPDATED_LINGUAGENS).humanas(UPDATED_HUMANAS).natureza(UPDATED_NATUREZA).matematica(UPDATED_MATEMATICA);
+        updatedMeta
+            .linguagens(UPDATED_LINGUAGENS)
+            .humanas(UPDATED_HUMANAS)
+            .natureza(UPDATED_NATUREZA)
+            .matematica(UPDATED_MATEMATICA)
+            .dataMeta(UPDATED_DATA_META);
         MetaDTO metaDTO = metaMapper.toDto(updatedMeta);
 
         webTestClient
@@ -361,7 +395,7 @@ class MetaResourceIT {
         Meta partialUpdatedMeta = new Meta();
         partialUpdatedMeta.setId(meta.getId());
 
-        partialUpdatedMeta.linguagens(UPDATED_LINGUAGENS);
+        partialUpdatedMeta.natureza(UPDATED_NATUREZA).dataMeta(UPDATED_DATA_META);
 
         webTestClient
             .patch()
@@ -393,7 +427,8 @@ class MetaResourceIT {
             .linguagens(UPDATED_LINGUAGENS)
             .humanas(UPDATED_HUMANAS)
             .natureza(UPDATED_NATUREZA)
-            .matematica(UPDATED_MATEMATICA);
+            .matematica(UPDATED_MATEMATICA)
+            .dataMeta(UPDATED_DATA_META);
 
         webTestClient
             .patch()

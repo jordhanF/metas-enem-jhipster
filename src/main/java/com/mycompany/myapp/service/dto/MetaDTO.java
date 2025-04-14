@@ -2,6 +2,7 @@ package com.mycompany.myapp.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -27,6 +28,11 @@ public class MetaDTO implements Serializable {
     @Min(value = 0)
     @Max(value = 1000)
     private Integer matematica;
+
+    private LocalDate dataMeta;
+
+    @NotNull
+    private AlunoDTO aluno;
 
     public Long getId() {
         return id;
@@ -68,6 +74,22 @@ public class MetaDTO implements Serializable {
         this.matematica = matematica;
     }
 
+    public LocalDate getDataMeta() {
+        return dataMeta;
+    }
+
+    public void setDataMeta(LocalDate dataMeta) {
+        this.dataMeta = dataMeta;
+    }
+
+    public AlunoDTO getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(AlunoDTO aluno) {
+        this.aluno = aluno;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -98,6 +120,8 @@ public class MetaDTO implements Serializable {
             ", humanas=" + getHumanas() +
             ", natureza=" + getNatureza() +
             ", matematica=" + getMatematica() +
+            ", dataMeta='" + getDataMeta() + "'" +
+            ", aluno=" + getAluno() +
             "}";
     }
 }

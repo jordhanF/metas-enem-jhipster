@@ -21,8 +21,6 @@ public class AlunoDTO implements Serializable {
 
     private LocalDate dataNascimento;
 
-    private MetaDTO meta;
-
     public Long getId() {
         return id;
     }
@@ -55,14 +53,6 @@ public class AlunoDTO implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    public MetaDTO getMeta() {
-        return meta;
-    }
-
-    public void setMeta(MetaDTO meta) {
-        this.meta = meta;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -92,7 +82,6 @@ public class AlunoDTO implements Serializable {
             ", nome='" + getNome() + "'" +
             ", email='" + getEmail() + "'" +
             ", dataNascimento='" + getDataNascimento() + "'" +
-            ", meta=" + getMeta() +
             "}";
     }
 }
